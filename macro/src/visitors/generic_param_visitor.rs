@@ -1,4 +1,4 @@
-use std::collections::HashSet;
+use indexmap::IndexSet;
 
 use syn::visit::{self, Visit};
 use syn::{GenericParam, Generics, LifetimeParam, PatType};
@@ -7,14 +7,14 @@ use syn::{GenericParam, Generics, LifetimeParam, PatType};
 #[derive(Debug)]
 pub struct GenericParamVisitor<'a> {
     candidates: &'a Generics,
-    found: HashSet<GenericParam>,
+    found: IndexSet<GenericParam>,
 }
 
 impl<'a> GenericParamVisitor<'a> {
     pub fn new(candidates: &'a Generics) -> Self {
         Self {
             candidates,
-            found: HashSet::new(),
+            found: IndexSet::new(),
         }
     }
 
@@ -24,7 +24,7 @@ impl<'a> GenericParamVisitor<'a> {
         }
     }
 
-    pub fn finish(self) -> HashSet<GenericParam> {
+    pub fn finish(self) -> IndexSet<GenericParam> {
         self.found
     }
 }

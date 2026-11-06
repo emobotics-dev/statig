@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use indexmap::IndexMap;
 
 use proc_macro_error2::abort;
 use syn::parse::Parser;
@@ -19,11 +19,11 @@ pub struct Model {
     /// General information regarding the state machine.
     pub state_machine: StateMachine,
     /// The states of the state machine.
-    pub states: HashMap<Ident, State>,
+    pub states: IndexMap<Ident, State>,
     /// The superstates of the state machine.
-    pub superstates: HashMap<Ident, Superstate>,
+    pub superstates: IndexMap<Ident, Superstate>,
     /// The actions of the state machine.
-    pub actions: HashMap<Ident, Action>,
+    pub actions: IndexMap<Ident, Action>,
 }
 
 /// General information regarding the state machine.
@@ -146,9 +146,9 @@ impl LocalStorageDefault {
 pub fn analyze(attribute_args: Vec<Meta>, mut item_impl: ItemImpl) -> Model {
     let state_machine = analyze_state_machine(&attribute_args[..], &item_impl);
 
-    let mut states = HashMap::new();
-    let mut superstates = HashMap::new();
-    let mut actions = HashMap::new();
+    let mut states = IndexMap::new();
+    let mut superstates = IndexMap::new();
+    let mut actions = IndexMap::new();
 
     // Create an iterator over only the method items.
     let methods = item_impl.items.iter_mut().filter_map(|item| match item {
@@ -891,9 +891,9 @@ fn valid_state_analyze() {
         is_async: false,
     };
 
-    let mut states = HashMap::new();
-    let mut superstates = HashMap::new();
-    let mut actions = HashMap::new();
+    let mut states = IndexMap::new();
+    let mut superstates = IndexMap::new();
+    let mut actions = IndexMap::new();
 
     states.insert(state.handler_name.clone(), state);
     superstates.insert(superstate.handler_name.clone(), superstate);

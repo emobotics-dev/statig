@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use indexmap::IndexMap;
 use std::ops::Deref;
 
 use proc_macro2::Span;
@@ -26,9 +26,9 @@ pub struct Ir {
     /// General information regarding the staet machine.
     pub state_machine: StateMachine,
     /// The states of the state machine.
-    pub states: HashMap<Ident, State>,
+    pub states: IndexMap<Ident, State>,
     /// The superstate of the state machine.
-    pub superstates: HashMap<Ident, Superstate>,
+    pub superstates: IndexMap<Ident, Superstate>,
 }
 
 #[cfg_attr(test, derive(Debug, Eq, PartialEq))]
@@ -180,13 +180,13 @@ pub fn lower(model: &Model) -> Ir {
 
     let mut superstate_lifetime: Option<Lifetime> = None;
 
-    let mut states: HashMap<Ident, State> = model
+    let mut states: IndexMap<Ident, State> = model
         .states
         .iter()
         .map(|(key, value)| (key.clone(), lower_state(value, &model.state_machine)))
         .collect();
 
-    let mut superstates: HashMap<Ident, Superstate> = model
+    let mut superstates: IndexMap<Ident, Superstate> = model
         .superstates
         .iter()
         .inspect(|(_, value)| {
@@ -198,7 +198,7 @@ pub fn lower(model: &Model) -> Ir {
         .map(|(key, value)| (key.clone(), lower_superstate(value, &model.state_machine)))
         .collect();
 
-    let actions: HashMap<Ident, Action> = model
+    let actions: IndexMap<Ident, Action> = model
         .actions
         .iter()
         .map(|(key, value)| (key.clone(), lower_action(value, &model.state_machine)))
